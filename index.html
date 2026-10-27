@@ -30,7 +30,7 @@
             <span class="nav-icon" aria-hidden="true">⌂</span> Recipe library
             <span class="nav-count" id="recipe-count">0</span>
           </button>
-          <div class="sidebar-label area-heading">AREAS <button class="text-icon-button" type="button" data-action="add-area" aria-label="Add area" title="Add area">+</button></div>
+          <div class="sidebar-label area-heading">AREAS</div>
           <nav id="area-nav" class="area-nav" aria-label="Filter recipes by area"></nav>
           <div class="sidebar-note">
             <span class="note-icon" aria-hidden="true">i</span>
@@ -48,13 +48,16 @@
                 <h1 id="page-title">Recipe library</h1>
                 <p class="page-subtitle" id="page-subtitle">A safe place to learn each workflow, one step at a time.</p>
               </div>
-              <button class="button button-primary" type="button" data-action="new-recipe"><span aria-hidden="true">＋</span> Create recipe</button>
+            </section>
+
+            <section id="load-error" class="notice-banner load-error" role="alert" hidden>
+              <span class="notice-icon" aria-hidden="true">!</span>
+              <p><strong>Recipe library unavailable.</strong> The published recipes could not be loaded. Please try again later or contact the site owner.</p>
             </section>
 
             <section class="notice-banner" aria-label="Simulation notice">
               <span class="notice-icon" aria-hidden="true">✳</span>
               <p><strong>Training mode only.</strong> All equipment actions, checks, acknowledgements, and outcomes here are simulated. Always follow your approved site procedures.</p>
-              <button class="icon-button" type="button" data-action="dismiss-notice" aria-label="Dismiss notice">×</button>
             </section>
 
             <section class="stats-grid" aria-label="Library summary">
@@ -72,8 +75,7 @@
               <div id="empty-state" class="empty-state" hidden>
                 <span class="empty-icon" aria-hidden="true">▤</span>
                 <h3>No recipes here yet</h3>
-                <p>Create a recipe to start building your training library.</p>
-                <button class="button button-secondary" type="button" data-action="new-recipe">Create your first recipe</button>
+                <p>There are no published training recipes in this area yet.</p>
               </div>
               <div id="no-results" class="empty-state compact-empty" hidden><h3>No matching recipes</h3><p>Try a different search or area.</p></div>
             </section>
@@ -82,37 +84,8 @@
       </div>
     </div>
 
-    <dialog id="recipe-dialog" class="modal-dialog">
-      <form id="recipe-form" class="modal-card">
-        <header class="modal-header">
-          <div><p class="eyebrow">RECIPE SETUP</p><h2 id="dialog-title">Create a recipe</h2></div>
-          <button class="icon-button" type="button" data-action="close-dialog" aria-label="Close dialog">×</button>
-        </header>
-        <div class="modal-body">
-          <div class="form-grid">
-            <label class="field field-wide">Recipe name<input name="name" required maxlength="80" placeholder="e.g. Autoclave preparation"></label>
-            <label class="field">Area<select name="area" id="recipe-area-select"></select></label>
-            <label class="field">Estimated time<input name="duration" maxlength="30" placeholder="e.g. 15 min"></label>
-            <label class="field field-wide">Short description<textarea name="description" rows="2" maxlength="180" placeholder="What will a trainee practice?"></textarea></label>
-          </div>
-          <div class="steps-heading"><div><h3>Recipe steps</h3><p>Add instructions, acknowledgements, and decision checks.</p></div><span id="step-count" class="step-count">0 steps</span></div>
-          <div id="step-editor-list" class="step-editor-list"></div>
-          <button class="button button-add-step" type="button" data-action="add-step"><span aria-hidden="true">＋</span> Add a step</button>
-        </div>
-        <footer class="modal-footer"><button class="button button-quiet" type="button" data-action="close-dialog">Cancel</button><button class="button button-primary" type="submit">Save recipe</button></footer>
-      </form>
-    </dialog>
-
     <dialog id="run-dialog" class="modal-dialog run-dialog">
       <section id="run-panel" class="run-panel" aria-live="polite"></section>
-    </dialog>
-
-    <dialog id="area-dialog" class="modal-dialog area-dialog">
-      <form id="area-form" class="modal-card">
-        <header class="modal-header"><div><p class="eyebrow">LIBRARY ORGANIZATION</p><h2>Add an area</h2></div><button class="icon-button" type="button" data-action="close-area" aria-label="Close dialog">×</button></header>
-        <div class="modal-body"><label class="field">Area name<input name="area" required maxlength="40" placeholder="e.g. Packaging"></label></div>
-        <footer class="modal-footer"><button class="button button-quiet" type="button" data-action="close-area">Cancel</button><button class="button button-primary" type="submit">Add area</button></footer>
-      </form>
     </dialog>
 
     <div id="toast" class="toast" role="status" aria-live="polite"></div>

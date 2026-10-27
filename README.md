@@ -8,24 +8,29 @@ Open `index.html` in a current desktop or mobile browser. No installation or bui
 
 ## Publish a public website
 
-Before the first deployment, a repository administrator must open **Settings → Pages** and set **Build and deployment → Source** to **GitHub Actions**. The workflow then deploys the static site whenever changes are pushed to `main`. It publishes only `index.html`, `styles.css`, and `app.js`. After a successful deployment, find the public URL in the workflow run or the repository's **Settings → Pages**. Anyone with the link can access the site.
+Before the first deployment, a repository administrator must open **Settings → Pages** and set **Build and deployment → Source** to **GitHub Actions**. The workflow then deploys the static site whenever changes are pushed to `main`. It publishes `index.html`, `styles.css`, `app.js`, and the shared `recipes.json` catalog. After a successful deployment, find the public URL in the workflow run or the repository's **Settings → Pages**. Anyone with the link can access the site.
 
 GitHub Pages is public hosting for this project. Do not publish confidential procedures, sensitive information, or content that is not approved for public access. The recipe library is stored in each visitor's browser, so creating or editing a recipe does not share it with other users.
 
-## Recipe library
+## Published recipe library
 
-- Start with the sample **Autoclave readiness check** recipe.
-- Use **Create recipe** to write a recipe, choose an area, estimate its duration, and add steps.
-- Add areas with the **+** button beside Areas. Recipes can be filtered by area and searched by name or description.
-- Edit a recipe to reorder its steps by removing and re-adding them, and to update instructions or checks.
-- Recipe data and areas are stored in this browser's local storage. They are not shared with other browsers or devices.
+The website is read-only for trainees. It loads the shared, published catalog from [`recipes.json`](./recipes.json); it does not offer a recipe editor or save recipes in a visitor's browser. Every visitor sees the same deployed recipes and areas.
+
+To add or update a recipe, edit `recipes.json` in the GitHub repository and push the change to `main`. GitHub Pages will deploy the updated shared library. Give write access to the repository only to the person authorized to publish recipes or application changes; everyone else can use the public website without a GitHub account. Check **Settings → Collaborators** and remove any write access that should not be there. Anyone may read the public repository, and users can make their own forks, but those changes do not change the official site.
+
+Run the site through GitHub Pages or a local static web server; opening `index.html` directly as a `file:` URL does not support loading the shared JSON catalog.
+
+## Recipe format
 
 ## Step types and check routes
 
+- Each recipe has a unique `id`, a `name`, an `area`, a short `description`, an estimated `duration`, and a `steps` array.
+- Each step has a unique `id` within its recipe, a `type`, a `title`, and `instructions`.
 - **Acknowledge / sign** asks the trainee to enter their name before they can continue. The name is only held during that practice session.
 - **Instruction / action** presents an instruction and a Next step button.
 - **Yes / no check** requires the trainee to select an answer. Configure each answer to continue, go to another step, end the recipe as complete, or stop practice.
+- For a check step, `yesNext` and `noNext` accept `next`, `complete`, `stop`, or the `id` of another step in the same recipe.
 
 The sample recipe is set to stop practice if an alarm occurs or the air removal test fails; a no-alarm result and a passing test continue to the next step. These are sample training routes, not operational instructions. Change them only to match approved site training procedures.
 
-For safety, use fictional or approved training content. The simulator does not validate real equipment, determine operational decisions, create production records, or replace approved site procedures. All assets are served locally by the browser; the app makes no network requests.
+For safety, use fictional or approved training content. This project is hosted publicly: recipe data, application code, and the website are accessible to anyone on the internet. Do not publish confidential procedures, sensitive information, or content that is not approved for public access. The simulator does not validate real equipment, determine operational decisions, create production records, or replace approved site procedures.

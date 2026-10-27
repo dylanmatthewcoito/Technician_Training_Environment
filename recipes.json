@@ -1,0 +1,57 @@
+[
+  {
+    "id": "autoclave-readiness",
+    "name": "Autoclave readiness check",
+    "area": "Autoclave",
+    "description": "Practice the simulated equipment check, cycle start, and readiness review.",
+    "duration": "15 min",
+    "steps": [
+      {
+        "id": "review-safety",
+        "type": "acknowledge",
+        "title": "Review autoclave safety",
+        "instructions": "Acknowledge the autoclave safety prompt. Follow your approved site procedures before working with equipment."
+      },
+      {
+        "id": "check-in-equipment",
+        "type": "action",
+        "title": "Check in autoclave equipment",
+        "instructions": "In this simulation, check the autoclave equipment in to the training system."
+      },
+      {
+        "id": "load-test-pack",
+        "type": "action",
+        "title": "Load the test pack and close the doors",
+        "instructions": "In this simulation, place the test pack inside and confirm the autoclave doors are shut. Follow your approved site procedures for real equipment."
+      },
+      {
+        "id": "press-start",
+        "type": "action",
+        "title": "Press Start",
+        "instructions": "Simulate pressing Start to begin the training cycle."
+      },
+      {
+        "id": "alarm-check",
+        "type": "check",
+        "title": "Was there an alarm?",
+        "instructions": "Record whether an alarm occurred during the simulated cycle. Follow the configured training route and your site's approved procedures.",
+        "yesNext": "stop",
+        "noNext": "next"
+      },
+      {
+        "id": "air-removal-check",
+        "type": "check",
+        "title": "Did the autoclave pass the air removal test?",
+        "instructions": "Record the simulated air removal test result. Follow the configured training route and your site's approved procedures.",
+        "yesNext": "next",
+        "noNext": "stop"
+      },
+      {
+        "id": "assign-available",
+        "type": "action",
+        "title": "Assign autoclave status",
+        "instructions": "In this simulation, assign the autoclave status as Available."
+      }
+    ]
+  }
+]

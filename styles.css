@@ -72,6 +72,7 @@ h1 { margin: 0; font-size: 27px; font-weight: 700; letter-spacing: -.85px; }
 .button-secondary:hover, .button-quiet:hover { background: #f3f7f5; }
 .button-quiet { border-color: #e6eaed; color: #6a7782; background: white; }
 .notice-banner { display: flex; align-items: center; gap: 11px; padding: 11px 13px; border: 1px solid #e8e4d7; border-radius: 8px; background: #fffdf7; }
+.notice-banner[hidden] { display: none; }
 .notice-icon { width: 18px; height: 18px; flex: 0 0 auto; display: grid; place-items: center; border-radius: 50%; color: #9a8147; background: #f7efd9; font-size: 11px; }
 .notice-banner p { flex: 1; margin: 0; color: #817c6c; font-size: 10px; line-height: 1.5; }
 .notice-banner strong { color: #706443; }
