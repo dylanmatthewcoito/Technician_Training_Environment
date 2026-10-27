@@ -8,7 +8,7 @@ Open `index.html` in a current desktop or mobile browser. No installation or bui
 
 ## Publish a public website
 
-The GitHub Actions workflow deploys the static site to GitHub Pages whenever changes are pushed to `main`. It publishes only `index.html`, `styles.css`, and `app.js`. After the first successful deployment, find the public URL in the workflow run or the repository's **Settings → Pages**. Anyone with the link can access the site.
+Before the first deployment, a repository administrator must open **Settings → Pages** and set **Build and deployment → Source** to **GitHub Actions**. The workflow then deploys the static site whenever changes are pushed to `main`. It publishes only `index.html`, `styles.css`, and `app.js`. After a successful deployment, find the public URL in the workflow run or the repository's **Settings → Pages**. Anyone with the link can access the site.
 
 GitHub Pages is public hosting for this project. Do not publish confidential procedures, sensitive information, or content that is not approved for public access. The recipe library is stored in each visitor's browser, so creating or editing a recipe does not share it with other users.
 

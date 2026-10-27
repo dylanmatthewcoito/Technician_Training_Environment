@@ -27,16 +27,16 @@ jobs:
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
-        with:
-          enablement: true
+
+      - name: Prepare website files
+        run: |
+          mkdir -p _site
+          cp index.html styles.css app.js _site/
 
       - name: Upload website files
         uses: actions/upload-pages-artifact@v3
         with:
-          path: |
-            index.html
-            styles.css
-            app.js
+          path: _site
 
       - name: Deploy
         id: deployment
