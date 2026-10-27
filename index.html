@@ -91,14 +91,16 @@
                 <span id="detail-duration" class="detail-duration"></span>
               </div>
               <div class="flow-instructions">
-                <span class="flow-instructions-icon" aria-hidden="true">↘</span>
+                <span class="flow-instructions-icon" aria-hidden="true">→</span>
                 <p><strong>Follow the flow, one step at a time.</strong> Select the highlighted step, complete its prompt, then return here to unlock the next step. Decision steps follow the route shown.</p>
               </div>
               <div class="flow-summary">
                 <div><span class="eyebrow">YOUR PROGRESS</span><strong id="flow-progress"></strong></div>
                 <span id="flow-status" class="flow-status"></span>
               </div>
-              <ol id="recipe-flowchart" class="recipe-flowchart" aria-label="Recipe step flowchart"></ol>
+              <div class="flowchart-scroll" role="region" aria-label="Recipe flowchart. Scroll horizontally to view every step." tabindex="0">
+                <ol id="recipe-flowchart" class="recipe-flowchart"></ol>
+              </div>
               <div id="flow-complete" class="flow-outcome" hidden>
                 <span class="result-icon">✓</span>
                 <div><strong>Practice complete</strong><p>You reached a configured completion point in this simulated recipe. No equipment or production records were changed.</p></div>

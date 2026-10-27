@@ -41,6 +41,7 @@
       if (recipeIds.has(recipe.id)) throw new Error("Recipe ids must be unique.");
       recipeIds.add(recipe.id);
       const stepIds = new Set();
+      const stepLabels = new Set();
       recipe.steps.forEach(function (step) {
         if (!step || typeof step.id !== "string" || !step.id || typeof step.title !== "string" || !step.title ||
             typeof step.instructions !== "string" || !step.instructions ||
@@ -49,6 +50,12 @@
         }
         if (stepIds.has(step.id)) throw new Error("Step ids must be unique within a recipe.");
         stepIds.add(step.id);
+        if (step.label !== undefined) {
+          if (typeof step.label !== "string" || !step.label.trim() || stepLabels.has(step.label)) {
+            throw new Error("Step labels must be non-empty and unique within a recipe.");
+          }
+          stepLabels.add(step.label);
+        }
       });
       recipe.steps.forEach(function (step) {
         if (step.type !== "check") return;
@@ -120,6 +127,16 @@
     return { acknowledge: "Acknowledge / sign", action: "Instruction / action", check: "Yes / no check" }[type] || "Instruction / action";
   }
 
+  function getStepLabels(recipe) {
+    const counts = {};
+    return recipe.steps.map(function (step) {
+      if (step.label) return step.label;
+      const prefix = step.type === "acknowledge" ? "Signiture" : (step.type === "check" ? "Check" : (/check in.*equipment/i.test(step.title) ? "CheckInEquipment" : "OperatorInstruction"));
+      counts[prefix] = (counts[prefix] || 0) + 1;
+      return prefix + counts[prefix];
+    });
+  }
+
   function startRun(recipe) {
     if (!recipe || !recipe.steps || recipe.steps.length === 0) {
       showToast("This recipe has no steps to practice.");
@@ -154,6 +171,7 @@
     status.className = "flow-status" + (isComplete ? " complete" : (isStopped ? " stopped" : ""));
     document.getElementById("flow-complete").hidden = !isComplete;
     document.getElementById("flow-stopped").hidden = !isStopped;
+    const labels = getStepLabels(recipe);
     document.getElementById("recipe-flowchart").innerHTML = recipe.steps.map(function (step, index) {
       const completed = visited.has(step.id);
       const wasSkipped = skipped.has(step.id);
@@ -161,25 +179,13 @@
       const stepState = completed ? "completed" : (wasSkipped ? "skipped" : (isCurrent ? "current" : "locked"));
       const statusText = completed ? "Completed" : (wasSkipped ? "Skipped by route" : (isCurrent ? "Ready — select to begin" : (isStopped ? "Not reached" : "Locked")));
       const icon = completed ? "✓" : (wasSkipped ? "↪" : String(index + 1));
-      const typeText = stepTypeLabel(step.type);
-      const routeSummary = step.type === "check" ?
-        '<div class="flow-routes"><span><strong>Yes</strong> ' + routeLabel(step.yesNext) + '</span><span><strong>No</strong> ' + routeLabel(step.noNext) + '</span></div>' : "";
       return '<li class="flow-step ' + stepState + (step.type === "check" ? " decision" : "") + '">' +
         '<button class="flow-step-button" type="button" data-action="open-step" data-id="' + escapeHtml(step.id) + '" ' + (isCurrent ? "" : "disabled") + ' aria-current="' + (isCurrent ? "step" : "false") + '">' +
-        '<span class="flow-step-icon" aria-hidden="true">' + icon + '</span><span class="flow-step-content"><span class="flow-step-topline"><span class="flow-step-number">STEP ' + (index + 1) + '</span><span class="flow-step-type">' + escapeHtml(typeText) + '</span></span>' +
-        '<strong class="flow-step-title">' + escapeHtml(step.title) + '</strong><span class="flow-step-status">' + escapeHtml(statusText) + '</span>' + routeSummary +
+        '<span class="flow-step-icon" aria-hidden="true">' + icon + '</span><span class="flow-step-content">' +
+        '<strong class="flow-step-code">' + escapeHtml(labels[index]) + '</strong><span class="flow-step-status">' + escapeHtml(statusText) + '</span>' +
         '</span><span class="flow-step-action" aria-hidden="true">' + (isCurrent ? "Open prompt →" : (completed ? "✓" : (wasSkipped ? "Skipped" : "Locked"))) + '</span></button></li>';
     }).join("");
     document.getElementById("main-content").focus();
-  }
-
-  function routeLabel(route) {
-    const value = route || "next";
-    if (value === "next") return "Continue";
-    if (value === "complete") return "Complete recipe";
-    if (value === "stop") return "Stop practice";
-    const index = activeRun.recipe.steps.findIndex(function (step) { return step.id === value; });
-    return index < 0 ? "Invalid step" : "Go to step " + (index + 1);
   }
 
   function openRunStep(stepId) {

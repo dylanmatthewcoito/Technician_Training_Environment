@@ -127,8 +127,8 @@ h1 { margin: 0; font-size: 27px; font-weight: 700; letter-spacing: -.85px; }
 .recipe-home-heading h2 { margin: 0 0 5px; font-size: 22px; letter-spacing: -.55px; }
 .recipe-home-heading p { max-width: 650px; margin: 0; color: #82909a; font-size: 11px; line-height: 1.6; }
 .detail-duration { padding: 7px 10px; border: 1px solid #e4e9e7; border-radius: 7px; color: #718078; background: white; font-size: 10px; white-space: nowrap; }
-.flow-instructions { display: flex; align-items: center; gap: 11px; margin: 0 0 17px; padding: 11px 13px; border: 1px solid #dfeae3; border-radius: 8px; background: #f7faf8; }
-.flow-instructions-icon { width: 25px; height: 25px; flex: 0 0 auto; display: grid; place-items: center; border-radius: 7px; color: #418164; background: #e7f2eb; font-size: 15px; }
+.flow-instructions { display: flex; align-items: center; gap: 11px; margin: 0 0 17px; padding: 11px 13px; border: 1px solid rgba(201, 133, 69, .24); border-radius: 8px; background: rgba(224, 152, 79, .07); }
+.flow-instructions-icon { width: 25px; height: 25px; flex: 0 0 auto; display: grid; place-items: center; border-radius: 7px; color: #9a642e; background: rgba(224, 152, 79, .16); font-size: 15px; }
 .flow-instructions p { margin: 0; color: #75847c; font-size: 10px; line-height: 1.55; }
 .flow-instructions strong { color: #4b6a58; }
 .flow-summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; padding: 11px 13px; border: 1px solid #e7ebed; border-radius: 8px; background: white; }
@@ -138,38 +138,32 @@ h1 { margin: 0; font-size: 27px; font-weight: 700; letter-spacing: -.85px; }
 .flow-status { padding: 5px 8px; border-radius: 20px; color: #806b3e; background: #faf4e5; font-size: 9px; font-weight: 600; }
 .flow-status.complete { color: #347652; background: #eaf5ee; }
 .flow-status.stopped { color: #94613e; background: #fbf0e8; }
-.recipe-flowchart { margin: 0; padding: 6px 0 0; list-style: none; }
-.flow-step { position: relative; width: min(100%, 760px); margin: 0 auto 25px; padding: 0; }
-.flow-step:last-child { margin-bottom: 0; }
-.flow-step:not(:last-child)::after { position: absolute; top: 100%; left: 50%; width: 2px; height: 25px; background: #dce5e0; content: ""; }
-.flow-step:not(:last-child)::before { position: absolute; z-index: 1; bottom: -26px; left: calc(50% - 5px); width: 0; height: 0; border-top: 6px solid #9db5a8; border-right: 5px solid transparent; border-left: 5px solid transparent; content: ""; }
-.flow-step-button { width: 100%; display: flex; align-items: center; gap: 12px; padding: 13px 15px; border: 1px solid #e4e9eb; border-radius: 9px; color: var(--ink); background: white; text-align: left; }
-.flow-step.current .flow-step-button { border-color: #85b49d; background: #f5faf7; box-shadow: 0 0 0 3px rgba(21, 123, 100, .07); cursor: pointer; }
-.flow-step.current .flow-step-button:hover { border-color: #4f9b77; background: #edf7f0; }
+.flowchart-scroll { width: 100%; overflow-x: auto; padding: 8px 3px 16px; border-radius: 9px; overscroll-behavior-x: contain; scrollbar-color: #b7c8bf #edf1ee; scrollbar-width: thin; }
+.flowchart-scroll:focus-visible { outline: 2px solid #85b49d; outline-offset: 3px; }
+.recipe-flowchart { display: flex; align-items: stretch; width: max-content; min-width: 100%; margin: 0; padding: 4px 2px 8px; gap: 34px; list-style: none; }
+.flow-step { position: relative; flex: 0 0 230px; width: 230px; margin: 0; padding: 0; }
+.flow-step:not(:last-child)::after { position: absolute; top: 50%; left: 100%; width: 34px; height: 2px; background: rgba(196, 128, 64, .38); content: ""; }
+.flow-step:not(:last-child)::before { position: absolute; z-index: 1; top: calc(50% - 4px); left: calc(100% + 28px); width: 0; height: 0; border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 7px solid rgba(177, 108, 48, .72); content: ""; }
+.flow-step-button { width: 100%; min-height: 100px; display: flex; align-items: center; gap: 12px; padding: 15px; border: 1px solid #e4e9eb; border-radius: 9px; color: var(--ink); background: white; text-align: left; }
+.flow-step.current .flow-step-button { border-color: rgba(190, 119, 53, .58); background: rgba(224, 152, 79, .11); box-shadow: 0 0 0 3px rgba(224, 152, 79, .10); cursor: pointer; }
+.flow-step.current .flow-step-button:hover { border-color: rgba(174, 101, 38, .72); background: rgba(224, 152, 79, .17); }
 .flow-step.completed .flow-step-button { border-color: #e1ebe4; background: #f8fbf8; }
 .flow-step.skipped .flow-step-button { border-style: dashed; }
 .flow-step.locked .flow-step-button { color: #65717a; background: #fbfcfc; }
 .flow-step.decision:not(.current) .flow-step-button { border-color: #e1e8f0; background: #f9fbfd; }
 .flow-step-button:disabled { cursor: default; opacity: 1; }
 .flow-step-icon { width: 31px; height: 31px; flex: 0 0 auto; display: grid; place-items: center; border-radius: 9px; color: #86939b; background: #eff2f3; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 700; }
-.flow-step.current .flow-step-icon { color: white; background: var(--green); }
+.flow-step.current .flow-step-icon { color: #89531f; background: rgba(224, 152, 79, .23); }
 .flow-step.completed .flow-step-icon { color: #367451; background: #e4f1e8; }
 .flow-step.skipped .flow-step-icon { color: #8d7951; background: #f7f0e0; }
 .flow-step-content { min-width: 0; flex: 1; display: grid; gap: 4px; }
-.flow-step-topline { display: flex; align-items: center; gap: 8px; }
-.flow-step-number { color: #89959d; font-size: 8px; font-weight: 700; letter-spacing: .8px; }
-.flow-step-type { color: #74877e; font-size: 8px; font-weight: 600; }
-.flow-step.decision .flow-step-type { color: #617895; }
-.flow-step-title { overflow-wrap: anywhere; color: #314553; font-family: Manrope, sans-serif; font-size: 12px; }
+.flow-step-code { overflow-wrap: anywhere; color: #314553; font-family: Manrope, sans-serif; font-size: 12px; }
 .flow-step-status { color: #929da3; font-size: 9px; }
-.flow-step.current .flow-step-status { color: #3e7e5d; font-weight: 600; }
+.flow-step.current .flow-step-status { color: #8c5c2e; font-weight: 600; }
 .flow-step.completed .flow-step-status { color: #578367; }
 .flow-step-action { flex: 0 0 auto; color: #85918a; font-size: 9px; font-weight: 600; }
-.flow-step.current .flow-step-action { color: #227256; }
-.flow-routes { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
-.flow-routes span { padding: 4px 7px; border: 1px solid #e5eaf0; border-radius: 5px; color: #738092; background: #f7f9fb; font-size: 8px; }
-.flow-routes strong { color: #536e88; }
-.flow-outcome { align-items: center; gap: 12px; width: min(100%, 760px); margin: 17px auto 0; padding: 13px; border: 1px solid #dfece4; border-radius: 9px; background: #f5faf6; }
+.flow-step.current .flow-step-action { color: #8c5c2e; }
+.flow-outcome { display: flex; align-items: center; gap: 12px; width: 100%; margin: 17px auto 0; padding: 13px; border: 1px solid #dfece4; border-radius: 9px; background: #f5faf6; }
 .flow-outcome .result-icon { width: 35px; height: 35px; flex: 0 0 auto; margin: 0; border-radius: 11px; font-size: 16px; }
 .flow-outcome > div { flex: 1; }
 .flow-outcome > div > strong { color: #365646; font-family: Manrope, sans-serif; font-size: 11px; }
@@ -283,7 +277,9 @@ h1 { margin: 0; font-size: 27px; font-weight: 700; letter-spacing: -.85px; }
   .recipe-card { min-height: 169px; }
   .recipe-home-heading { flex-direction: column; gap: 9px; }
   .recipe-home-heading h2 { font-size: 19px; }
-  .flow-step-button { gap: 9px; padding: 11px 10px; }
+  .flow-step { flex-basis: 210px; width: 210px; }
+  .flowchart-scroll { padding-right: 4px; padding-left: 4px; }
+  .flow-step-button { min-height: 92px; gap: 9px; padding: 11px 10px; }
   .flow-step-action { max-width: 72px; text-align: right; }
   .flow-outcome { align-items: flex-start; flex-wrap: wrap; }
   .flow-outcome .button { margin-left: 47px; }
@@ -304,7 +300,7 @@ h1 { margin: 0; font-size: 27px; font-weight: 700; letter-spacing: -.85px; }
   .route-grid { grid-template-columns: 1fr; }
   .run-body { padding: 18px 16px 20px; }
   .flow-step-icon { width: 26px; height: 26px; }
-  .flow-step-title { font-size: 10px; }
+  .flow-step-code { font-size: 10px; }
   .flow-step-status { font-size: 8px; }
   .flow-instructions { align-items: flex-start; }
 }

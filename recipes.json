@@ -8,30 +8,35 @@
     "steps": [
       {
         "id": "review-safety",
+        "label": "Signiture1",
         "type": "acknowledge",
         "title": "Review autoclave safety",
         "instructions": "Acknowledge the autoclave safety prompt. Follow your approved site procedures before working with equipment."
       },
       {
         "id": "check-in-equipment",
+        "label": "CheckInEquipment1",
         "type": "action",
         "title": "Check in autoclave equipment",
         "instructions": "In this simulation, check the autoclave equipment in to the training system."
       },
       {
         "id": "load-test-pack",
+        "label": "OperatorInstruction1",
         "type": "action",
         "title": "Load the test pack and close the doors",
         "instructions": "In this simulation, place the test pack inside and confirm the autoclave doors are shut. Follow your approved site procedures for real equipment."
       },
       {
         "id": "press-start",
+        "label": "OperatorInstruction2",
         "type": "action",
         "title": "Press Start",
         "instructions": "Simulate pressing Start to begin the training cycle."
       },
       {
         "id": "alarm-check",
+        "label": "Check1",
         "type": "check",
         "title": "Was there an alarm?",
         "instructions": "Record whether an alarm occurred during the simulated cycle. Follow the configured training route and your site's approved procedures.",
@@ -40,6 +45,7 @@
       },
       {
         "id": "air-removal-check",
+        "label": "Check2",
         "type": "check",
         "title": "Did the autoclave pass the air removal test?",
         "instructions": "Record the simulated air removal test result. Follow the configured training route and your site's approved procedures.",
@@ -48,6 +54,7 @@
       },
       {
         "id": "assign-available",
+        "label": "OperatorInstruction3",
         "type": "action",
         "title": "Assign autoclave status",
         "instructions": "In this simulation, assign the autoclave status as Available."
