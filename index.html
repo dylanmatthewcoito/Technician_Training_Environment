@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f5f7f8">
+    <title>Technician Training Environment</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="#" data-action="home" aria-label="Training environment home">
+          <span class="brand-mark" aria-hidden="true">T</span>
+          <span class="brand-copy">
+            <strong>Technician Training</strong>
+            <span>SIMULATED WORKSPACE</span>
+          </span>
+        </a>
+        <div class="topbar-right">
+          <span class="environment-pill"><span></span> Training mode</span>
+          <span class="avatar" aria-label="Trainee">T</span>
+        </div>
+      </header>
+
+      <div class="workspace">
+        <aside class="sidebar" aria-label="Recipe navigation">
+          <div class="sidebar-label">WORKSPACE</div>
+          <button class="nav-link active" type="button" data-action="home">
+            <span class="nav-icon" aria-hidden="true">⌂</span> Recipe library
+            <span class="nav-count" id="recipe-count">0</span>
+          </button>
+          <div class="sidebar-label area-heading">AREAS <button class="text-icon-button" type="button" data-action="add-area" aria-label="Add area" title="Add area">+</button></div>
+          <nav id="area-nav" class="area-nav" aria-label="Filter recipes by area"></nav>
+          <div class="sidebar-note">
+            <span class="note-icon" aria-hidden="true">i</span>
+            <p><strong>Practice environment</strong><br>This simulator does not control equipment or connect to production systems.</p>
+          </div>
+          <div class="sidebar-footer">LOCAL TRAINING LIBRARY <span>v1.0</span></div>
+        </aside>
+
+        <main id="main-content" class="main-content" tabindex="-1">
+          <div class="content-inner">
+            <div class="breadcrumb"><span>Workspace</span><span class="breadcrumb-separator">/</span><strong>Recipe library</strong></div>
+            <section class="page-heading">
+              <div>
+                <p class="eyebrow">SIMULATION WORKSPACE</p>
+                <h1 id="page-title">Recipe library</h1>
+                <p class="page-subtitle" id="page-subtitle">A safe place to learn each workflow, one step at a time.</p>
+              </div>
+              <button class="button button-primary" type="button" data-action="new-recipe"><span aria-hidden="true">＋</span> Create recipe</button>
+            </section>
+
+            <section class="notice-banner" aria-label="Simulation notice">
+              <span class="notice-icon" aria-hidden="true">✳</span>
+              <p><strong>Training mode only.</strong> All equipment actions, checks, acknowledgements, and outcomes here are simulated. Always follow your approved site procedures.</p>
+              <button class="icon-button" type="button" data-action="dismiss-notice" aria-label="Dismiss notice">×</button>
+            </section>
+
+            <section class="stats-grid" aria-label="Library summary">
+              <article class="stat-card"><span class="stat-icon stat-icon-violet" aria-hidden="true">▤</span><div><span class="stat-label">Total recipes</span><strong id="stat-recipes">0</strong></div></article>
+              <article class="stat-card"><span class="stat-icon stat-icon-blue" aria-hidden="true">▦</span><div><span class="stat-label">Areas</span><strong id="stat-areas">0</strong></div></article>
+              <article class="stat-card"><span class="stat-icon stat-icon-green" aria-hidden="true">✓</span><div><span class="stat-label">Ready to practice</span><strong id="stat-ready">0</strong></div></article>
+            </section>
+
+            <section class="library-section">
+              <div class="section-heading">
+                <div><h2 id="library-title">Your recipes</h2><p id="library-description">Choose a workflow to preview or practice.</p></div>
+                <label class="search-box"><span aria-hidden="true">⌕</span><span class="sr-only">Search recipes</span><input id="recipe-search" type="search" placeholder="Search recipes..." autocomplete="off"></label>
+              </div>
+              <div id="recipe-grid" class="recipe-grid"></div>
+              <div id="empty-state" class="empty-state" hidden>
+                <span class="empty-icon" aria-hidden="true">▤</span>
+                <h3>No recipes here yet</h3>
+                <p>Create a recipe to start building your training library.</p>
+                <button class="button button-secondary" type="button" data-action="new-recipe">Create your first recipe</button>
+              </div>
+              <div id="no-results" class="empty-state compact-empty" hidden><h3>No matching recipes</h3><p>Try a different search or area.</p></div>
+            </section>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <dialog id="recipe-dialog" class="modal-dialog">
+      <form id="recipe-form" class="modal-card">
+        <header class="modal-header">
+          <div><p class="eyebrow">RECIPE SETUP</p><h2 id="dialog-title">Create a recipe</h2></div>
+          <button class="icon-button" type="button" data-action="close-dialog" aria-label="Close dialog">×</button>
+        </header>
+        <div class="modal-body">
+          <div class="form-grid">
+            <label class="field field-wide">Recipe name<input name="name" required maxlength="80" placeholder="e.g. Autoclave preparation"></label>
+            <label class="field">Area<select name="area" id="recipe-area-select"></select></label>
+            <label class="field">Estimated time<input name="duration" maxlength="30" placeholder="e.g. 15 min"></label>
+            <label class="field field-wide">Short description<textarea name="description" rows="2" maxlength="180" placeholder="What will a trainee practice?"></textarea></label>
+          </div>
+          <div class="steps-heading"><div><h3>Recipe steps</h3><p>Add instructions, acknowledgements, and decision checks.</p></div><span id="step-count" class="step-count">0 steps</span></div>
+          <div id="step-editor-list" class="step-editor-list"></div>
+          <button class="button button-add-step" type="button" data-action="add-step"><span aria-hidden="true">＋</span> Add a step</button>
+        </div>
+        <footer class="modal-footer"><button class="button button-quiet" type="button" data-action="close-dialog">Cancel</button><button class="button button-primary" type="submit">Save recipe</button></footer>
+      </form>
+    </dialog>
+
+    <dialog id="run-dialog" class="modal-dialog run-dialog">
+      <section id="run-panel" class="run-panel" aria-live="polite"></section>
+    </dialog>
+
+    <dialog id="area-dialog" class="modal-dialog area-dialog">
+      <form id="area-form" class="modal-card">
+        <header class="modal-header"><div><p class="eyebrow">LIBRARY ORGANIZATION</p><h2>Add an area</h2></div><button class="icon-button" type="button" data-action="close-area" aria-label="Close dialog">×</button></header>
+        <div class="modal-body"><label class="field">Area name<input name="area" required maxlength="40" placeholder="e.g. Packaging"></label></div>
+        <footer class="modal-footer"><button class="button button-quiet" type="button" data-action="close-area">Cancel</button><button class="button button-primary" type="submit">Add area</button></footer>
+      </form>
+    </dialog>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <script src="app.js"></script>
+  </body>
+</html>
