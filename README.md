@@ -14,7 +14,7 @@ GitHub Pages is public hosting for this project. Do not publish confidential pro
 
 ## Published recipe library
 
-The website is read-only for trainees. It loads the shared, published catalog from [`recipes.json`](./recipes.json); it does not offer a recipe editor or save recipes in a visitor's browser. Every visitor sees the same deployed recipes and areas.
+The website is read-only for trainees. It loads the shared, published catalog from [`recipes.json`](./recipes.json); it does not offer a recipe editor or save recipes in a visitor's browser. Every visitor sees the same deployed recipes and areas. Select a recipe to open its flowchart. Trainees select the highlighted step, complete its prompt, and return to the flowchart to unlock the next step. Yes/no checks follow the route configured for their answer.
 
 To add or update a recipe, edit `recipes.json` in the GitHub repository and push the change to `main`. GitHub Pages will deploy the updated shared library. Give write access to the repository only to the person authorized to publish recipes or application changes; everyone else can use the public website without a GitHub account. Check **Settings → Collaborators** and remove any write access that should not be there. Anyone may read the public repository, and users can make their own forks, but those changes do not change the official site.
 
@@ -22,12 +22,11 @@ Run the site through GitHub Pages or a local static web server; opening `index.h
 
 ## Recipe format
 
-## Step types and check routes
-
 - Each recipe has a unique `id`, a `name`, an `area`, a short `description`, an estimated `duration`, and a `steps` array.
 - Each step has a unique `id` within its recipe, a `type`, a `title`, and `instructions`.
+- For an action step, the trainee selects **Complete step & return to flow** to mark the simulated prompt complete.
 - **Acknowledge / sign** asks the trainee to enter their name before they can continue. The name is only held during that practice session.
-- **Instruction / action** presents an instruction and a Next step button.
+- **Instruction / action** presents an instruction and requires the trainee to explicitly complete the prompt.
 - **Yes / no check** requires the trainee to select an answer. Configure each answer to continue, go to another step, end the recipe as complete, or stop practice.
 - For a check step, `yesNext` and `noNext` accept `next`, `complete`, `stop`, or the `id` of another step in the same recipe.
 

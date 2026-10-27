@@ -9,6 +9,10 @@
   const recipeGrid = document.getElementById("recipe-grid");
   const areaNav = document.getElementById("area-nav");
   const searchInput = document.getElementById("recipe-search");
+  const libraryHeading = document.getElementById("library-heading");
+  const libraryStats = document.getElementById("library-stats");
+  const librarySection = document.querySelector(".library-section");
+  const recipeHome = document.getElementById("recipe-home");
   const runDialog = document.getElementById("run-dialog");
   const runPanel = document.getElementById("run-panel");
 
@@ -108,7 +112,7 @@
         '<div class="recipe-card-top"><span class="area-tag"><span></span>' + escapeHtml(recipe.area) + '</span></div>' +
         '<h3>' + escapeHtml(recipe.name) + '</h3><p class="recipe-description">' + escapeHtml(recipe.description || "No description yet.") + '</p>' +
         '<div class="recipe-card-bottom"><div class="recipe-meta"><span>☷ ' + recipe.steps.length + ' steps</span><span>◷ ' + escapeHtml(recipe.duration || "—") + '</span></div>' +
-        '<div class="card-actions"><button class="small-button start" type="button" data-action="start-recipe" data-id="' + escapeHtml(recipe.id) + '">Practice <span aria-hidden="true">→</span></button></div></div></article>';
+        '<div class="card-actions"><button class="small-button start" type="button" data-action="view-recipe" data-id="' + escapeHtml(recipe.id) + '">View flow <span aria-hidden="true">→</span></button></div></div></article>';
     }).join("");
   }
 
@@ -121,7 +125,65 @@
       showToast("This recipe has no steps to practice.");
       return;
     }
-    activeRun = { recipe: recipe, currentStepId: recipe.steps[0].id, answers: {}, signature: "", visited: [], result: null };
+    activeRun = { recipe: recipe, currentStepId: recipe.steps[0].id, answers: {}, signature: "", visited: [], skipped: [], result: null };
+    renderRecipeHome();
+  }
+
+  function renderRecipeHome() {
+    if (!activeRun) return;
+    libraryHeading.hidden = true;
+    libraryStats.hidden = true;
+    librarySection.hidden = true;
+    recipeHome.hidden = false;
+
+    const recipe = activeRun.recipe;
+    document.getElementById("breadcrumb-current").textContent = recipe.name;
+    const visited = new Set(activeRun.visited);
+    const skipped = new Set(activeRun.skipped);
+    document.getElementById("detail-area").innerHTML = "<span></span>" + escapeHtml(recipe.area);
+    document.getElementById("detail-title").textContent = recipe.name;
+    document.getElementById("detail-description").textContent = recipe.description || "Practice this recipe in a simulated environment.";
+    document.getElementById("detail-duration").textContent = "◷ " + (recipe.duration || "—");
+
+    const progress = activeRun.visited.length;
+    document.getElementById("flow-progress").textContent = progress + " of " + recipe.steps.length + " steps completed";
+    const status = document.getElementById("flow-status");
+    const isComplete = activeRun.result === "complete";
+    const isStopped = activeRun.result === "stopped";
+    status.textContent = isComplete ? "Complete" : (isStopped ? "Stopped" : "In progress");
+    status.className = "flow-status" + (isComplete ? " complete" : (isStopped ? " stopped" : ""));
+    document.getElementById("flow-complete").hidden = !isComplete;
+    document.getElementById("flow-stopped").hidden = !isStopped;
+    document.getElementById("recipe-flowchart").innerHTML = recipe.steps.map(function (step, index) {
+      const completed = visited.has(step.id);
+      const wasSkipped = skipped.has(step.id);
+      const isCurrent = !activeRun.result && step.id === activeRun.currentStepId;
+      const stepState = completed ? "completed" : (wasSkipped ? "skipped" : (isCurrent ? "current" : "locked"));
+      const statusText = completed ? "Completed" : (wasSkipped ? "Skipped by route" : (isCurrent ? "Ready — select to begin" : (isStopped ? "Not reached" : "Locked")));
+      const icon = completed ? "✓" : (wasSkipped ? "↪" : String(index + 1));
+      const typeText = stepTypeLabel(step.type);
+      const routeSummary = step.type === "check" ?
+        '<div class="flow-routes"><span><strong>Yes</strong> ' + routeLabel(step.yesNext) + '</span><span><strong>No</strong> ' + routeLabel(step.noNext) + '</span></div>' : "";
+      return '<li class="flow-step ' + stepState + (step.type === "check" ? " decision" : "") + '">' +
+        '<button class="flow-step-button" type="button" data-action="open-step" data-id="' + escapeHtml(step.id) + '" ' + (isCurrent ? "" : "disabled") + ' aria-current="' + (isCurrent ? "step" : "false") + '">' +
+        '<span class="flow-step-icon" aria-hidden="true">' + icon + '</span><span class="flow-step-content"><span class="flow-step-topline"><span class="flow-step-number">STEP ' + (index + 1) + '</span><span class="flow-step-type">' + escapeHtml(typeText) + '</span></span>' +
+        '<strong class="flow-step-title">' + escapeHtml(step.title) + '</strong><span class="flow-step-status">' + escapeHtml(statusText) + '</span>' + routeSummary +
+        '</span><span class="flow-step-action" aria-hidden="true">' + (isCurrent ? "Open prompt →" : (completed ? "✓" : (wasSkipped ? "Skipped" : "Locked"))) + '</span></button></li>';
+    }).join("");
+    document.getElementById("main-content").focus();
+  }
+
+  function routeLabel(route) {
+    const value = route || "next";
+    if (value === "next") return "Continue";
+    if (value === "complete") return "Complete recipe";
+    if (value === "stop") return "Stop practice";
+    const index = activeRun.recipe.steps.findIndex(function (step) { return step.id === value; });
+    return index < 0 ? "Invalid step" : "Go to step " + (index + 1);
+  }
+
+  function openRunStep(stepId) {
+    if (!activeRun || activeRun.result || activeRun.currentStepId !== stepId) return;
     renderRun();
     runDialog.showModal();
   }
@@ -177,12 +239,12 @@
   function runButton(step) {
     if (step.type === "check") {
       const selected = activeRun.answers[step.id];
-      return '<button class="button button-primary" type="button" data-action="continue" ' + (selected ? "" : "disabled") + '>Record answer &amp; continue <span aria-hidden="true">→</span></button>';
+      return '<button class="button button-primary" type="button" data-action="continue" ' + (selected ? "" : "disabled") + '>Complete prompt &amp; return to flow <span aria-hidden="true">→</span></button>';
     }
     if (step.type === "acknowledge") {
-      return '<button class="button button-primary" type="button" data-action="continue" ' + (activeRun.signature ? "" : "disabled") + '>Sign &amp; continue <span aria-hidden="true">→</span></button>';
+      return '<button class="button button-primary" type="button" data-action="continue" ' + (activeRun.signature ? "" : "disabled") + '>Sign &amp; complete step <span aria-hidden="true">✓</span></button>';
     }
-    return '<button class="button button-primary" type="button" data-action="continue">Next step <span aria-hidden="true">→</span></button>';
+    return '<button class="button button-primary" type="button" data-action="continue">Complete step &amp; return to flow <span aria-hidden="true">→</span></button>';
   }
 
   function advanceRun() {
@@ -201,7 +263,10 @@
       const route = activeRun.answers[step.id] === "Yes" ? (step.yesNext || "next") : (step.noNext || "next");
       if (route === "complete") {
         activeRun.result = "complete";
-        renderRun();
+        const index = activeRun.recipe.steps.findIndex(function (candidate) { return candidate.id === step.id; });
+        activeRun.skipped = activeRun.skipped.concat(activeRun.recipe.steps.slice(index + 1).map(function (candidate) { return candidate.id; }));
+        runDialog.close();
+        renderRecipeHome();
         return;
       }
       if (route === "stop") {
@@ -210,35 +275,52 @@
         return;
       }
       if (route !== "next") {
-        if (!activeRun.recipe.steps.some(function (candidate) { return candidate.id === route; })) {
+        const targetIndex = activeRun.recipe.steps.findIndex(function (candidate) { return candidate.id === route; });
+        if (targetIndex < 0) {
           showToast("This check routes to a step that no longer exists. Please contact the site owner.");
           return;
         }
+        const index = activeRun.recipe.steps.findIndex(function (candidate) { return candidate.id === step.id; });
+        if (targetIndex > index) {
+          const visited = new Set(activeRun.visited);
+          const skipped = new Set(activeRun.skipped);
+          activeRun.recipe.steps.slice(index + 1, targetIndex).forEach(function (candidate) {
+            if (!visited.has(candidate.id)) skipped.add(candidate.id);
+          });
+          activeRun.skipped = Array.from(skipped);
+        }
         activeRun.currentStepId = route;
-        renderRun();
+        runDialog.close();
+        renderRecipeHome();
         return;
       }
     }
     const index = activeRun.recipe.steps.findIndex(function (candidate) { return candidate.id === step.id; });
     if (index >= activeRun.recipe.steps.length - 1) activeRun.result = "complete";
     else activeRun.currentStepId = activeRun.recipe.steps[index + 1].id;
-    renderRun();
+    runDialog.close();
+    renderRecipeHome();
   }
 
   function renderRunResult(result) {
-    const completed = result === "complete";
     const answered = Object.keys(activeRun.answers).length;
     runPanel.innerHTML = '<header class="run-header"><div class="run-brand"><span class="run-brand-mark">T</span> Technician Training</div><div class="run-header-actions"><span class="run-badge">SIMULATION</span><button class="icon-button" type="button" data-action="close-run" aria-label="Exit practice">×</button></div></header>' +
-      '<section class="run-result"><span class="result-icon' + (completed ? "" : " stopped") + '">' + (completed ? "✓" : "Ⅱ") + '</span><h2>' + (completed ? "Practice complete" : "Practice stopped") + '</h2>' +
-      '<p>' + (completed ? "You reached the end of this simulated recipe. No equipment or production records were changed." : "This practice ended at the configured stop point. Follow your approved site escalation process for real events.") + '</p>' +
+      '<section class="run-result"><span class="result-icon stopped">Ⅱ</span><h2>Practice stopped</h2>' +
+      '<p>This practice ended at the configured stop point. Follow your approved site escalation process for real events.</p>' +
       '<div class="result-summary"><strong>' + escapeHtml(activeRun.recipe.name) + '</strong><br>' + activeRun.visited.length + " of " + activeRun.recipe.steps.length + " steps visited · " + answered + ' check' + (answered === 1 ? "" : "s") + ' answered<br>' + (activeRun.signature ? "Acknowledged by " + escapeHtml(activeRun.signature) + " (simulation only)" : "No live signature recorded") + '</div>' +
-      '<div class="card-actions"><button class="button button-secondary" type="button" data-action="close-run">Back to library</button><button class="button button-primary" type="button" data-action="restart-run">Practice again</button></div></section>';
+      '<div class="card-actions"><button class="button button-secondary" type="button" data-action="close-run">Back to flowchart</button><button class="button button-primary" type="button" data-action="restart-run">Restart practice</button></div></section>';
   }
 
   document.addEventListener("click", function (event) {
     const target = event.target.closest("[data-action], [data-area]");
     if (!target) return;
     if (target.dataset.area) {
+      activeRun = null;
+      recipeHome.hidden = true;
+      libraryHeading.hidden = false;
+      libraryStats.hidden = false;
+      librarySection.hidden = false;
+      document.getElementById("breadcrumb-current").textContent = "Recipe library";
       selectedArea = target.dataset.area;
       searchInput.value = "";
       renderRecipes();
@@ -247,12 +329,22 @@
     }
     switch (target.dataset.action) {
       case "home":
+      case "back-library":
+        activeRun = null;
+        recipeHome.hidden = true;
+        libraryHeading.hidden = false;
+        libraryStats.hidden = false;
+        librarySection.hidden = false;
+        document.getElementById("breadcrumb-current").textContent = "Recipe library";
         selectedArea = "all";
         searchInput.value = "";
         renderRecipes();
         break;
-      case "start-recipe":
+      case "view-recipe":
         startRun(recipes.find(function (item) { return item.id === target.dataset.id; }));
+        break;
+      case "open-step":
+        openRunStep(target.dataset.id);
         break;
       case "answer": {
         const step = currentRunStep();
@@ -266,7 +358,7 @@
         break;
       case "close-run":
         runDialog.close();
-        activeRun = null;
+        renderRecipeHome();
         break;
       case "restart-run":
         if (activeRun) startRun(activeRun.recipe);
@@ -278,7 +370,7 @@
   runDialog.addEventListener("click", function (event) {
     if (event.target === runDialog) {
       runDialog.close();
-      activeRun = null;
+      renderRecipeHome();
     }
   });
 

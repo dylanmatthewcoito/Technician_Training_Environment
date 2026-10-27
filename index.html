@@ -36,13 +36,13 @@
             <span class="note-icon" aria-hidden="true">i</span>
             <p><strong>Practice environment</strong><br>This simulator does not control equipment or connect to production systems.</p>
           </div>
-          <div class="sidebar-footer">LOCAL TRAINING LIBRARY <span>v1.0</span></div>
+          <div class="sidebar-footer">PUBLISHED TRAINING LIBRARY <span>v1.0</span></div>
         </aside>
 
         <main id="main-content" class="main-content" tabindex="-1">
           <div class="content-inner">
-            <div class="breadcrumb"><span>Workspace</span><span class="breadcrumb-separator">/</span><strong>Recipe library</strong></div>
-            <section class="page-heading">
+            <div class="breadcrumb"><span>Workspace</span><span class="breadcrumb-separator">/</span><strong id="breadcrumb-current">Recipe library</strong></div>
+            <section id="library-heading" class="page-heading">
               <div>
                 <p class="eyebrow">SIMULATION WORKSPACE</p>
                 <h1 id="page-title">Recipe library</h1>
@@ -60,7 +60,7 @@
               <p><strong>Training mode only.</strong> All equipment actions, checks, acknowledgements, and outcomes here are simulated. Always follow your approved site procedures.</p>
             </section>
 
-            <section class="stats-grid" aria-label="Library summary">
+            <section id="library-stats" class="stats-grid" aria-label="Library summary">
               <article class="stat-card"><span class="stat-icon stat-icon-violet" aria-hidden="true">▤</span><div><span class="stat-label">Total recipes</span><strong id="stat-recipes">0</strong></div></article>
               <article class="stat-card"><span class="stat-icon stat-icon-blue" aria-hidden="true">▦</span><div><span class="stat-label">Areas</span><strong id="stat-areas">0</strong></div></article>
               <article class="stat-card"><span class="stat-icon stat-icon-green" aria-hidden="true">✓</span><div><span class="stat-label">Ready to practice</span><strong id="stat-ready">0</strong></div></article>
@@ -78,6 +78,37 @@
                 <p>There are no published training recipes in this area yet.</p>
               </div>
               <div id="no-results" class="empty-state compact-empty" hidden><h3>No matching recipes</h3><p>Try a different search or area.</p></div>
+            </section>
+
+            <section id="recipe-home" class="recipe-home" hidden>
+              <button class="button button-quiet back-to-library" type="button" data-action="back-library"><span aria-hidden="true">←</span> All recipes</button>
+              <div class="recipe-home-heading">
+                <div>
+                  <span id="detail-area" class="area-tag"></span>
+                  <h2 id="detail-title"></h2>
+                  <p id="detail-description"></p>
+                </div>
+                <span id="detail-duration" class="detail-duration"></span>
+              </div>
+              <div class="flow-instructions">
+                <span class="flow-instructions-icon" aria-hidden="true">↘</span>
+                <p><strong>Follow the flow, one step at a time.</strong> Select the highlighted step, complete its prompt, then return here to unlock the next step. Decision steps follow the route shown.</p>
+              </div>
+              <div class="flow-summary">
+                <div><span class="eyebrow">YOUR PROGRESS</span><strong id="flow-progress"></strong></div>
+                <span id="flow-status" class="flow-status"></span>
+              </div>
+              <ol id="recipe-flowchart" class="recipe-flowchart" aria-label="Recipe step flowchart"></ol>
+              <div id="flow-complete" class="flow-outcome" hidden>
+                <span class="result-icon">✓</span>
+                <div><strong>Practice complete</strong><p>You reached a configured completion point in this simulated recipe. No equipment or production records were changed.</p></div>
+                <button class="button button-secondary" type="button" data-action="restart-run">Practice again</button>
+              </div>
+              <div id="flow-stopped" class="flow-outcome flow-stopped" hidden>
+                <span class="result-icon stopped">Ⅱ</span>
+                <div><strong>Practice stopped</strong><p>This recipe reached a configured stop point. Follow approved site procedures for real events.</p></div>
+                <button class="button button-secondary" type="button" data-action="restart-run">Restart practice</button>
+              </div>
             </section>
           </div>
         </main>
