@@ -32,6 +32,7 @@ jobs:
         run: |
           mkdir -p _site
           cp index.html styles.css app.js recipes.json _site/
+          sed -i "s|styles.css|styles.css?v=${GITHUB_SHA}|g; s|app.js|app.js?v=${GITHUB_SHA}|g" _site/index.html
 
       - name: Upload website files
         uses: actions/upload-pages-artifact@v3
